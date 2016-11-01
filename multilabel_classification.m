@@ -39,8 +39,8 @@ function []= multilabel_classification()
     intersect_val=0.0;
     union_val=0.0;
     for k=1:rows_test
-        intersect_val= intersect_val+sum(intersect(test_class(k,:),final_label(k,:)));
-        union_val= union_val+sum(union(test_class(k,:),final_label(k,:)));
+        intersect_val= intersect_val+dot(test_class(k,:),final_label(k,:));
+        union_val= union_val+sum(test_class(k,:))+sum(final_label(k,:))-dot(test_class(k,:),final_label(k,:));
     end
     accuracy = intersect_val/union_val;
     disp(sprintf('Accuracy for Scene_Data test dataset is: %f',accuracy));
