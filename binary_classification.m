@@ -38,6 +38,6 @@ function []= binary_classification()
         end
     end
     percentage = count/rows_test * 100;
-    disp(sprintf('Accuracy for VidTIMIT test dataset is: %f',percentage));
+    disp(sprintf('Percentage accuracy for VidTIMIT test dataset is: %f',percentage));
     
         

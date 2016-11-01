@@ -44,5 +44,6 @@ function []= multilabel_classification()
     end
     accuracy = intersect_val/union_val;
     disp(sprintf('Accuracy for Scene_Data test dataset is: %f',accuracy));
+    disp(sprintf('Percentage accuracy for Scene_Data test dataset is: %f',accuracy*100));
     
         
