@@ -13,22 +13,23 @@ function []= multilabel_classification()
 %     Needed data to train and test
     rows_test = size(test_data,1);
     total_unique_classes=6;
+    final_label=[];
     
 %     Training the SVMs for Scene_Data traning dataset, using fitcsvm
     display('Training models for Scene_Data traning dataset');
     for class=1:total_unique_classes
 %         class_index = eq(training_class(:,class),unique_classes(class));
         if type==1 
-            SVMModels{class} = fitcsvm(training_data,training_class(:,class),'KernelFunction','polynomial','PolynomialOrder',2);
+            SVMModels{class} = fitcsvm(training_data,training_class(:,class),'KernelFunction','polynomial','PolynomialOrder',2,'KernelScale','auto','Standardize',true);
         else
-            SVMModels{class} = fitcsvm(training_data,training_class(:,class),'KernelFunction','gaussian');
+            SVMModels{class} = fitcsvm(training_data,training_class(:,class),'KernelFunction','gaussian','KernelScale','auto','BoxConstraint',1);
         end
-        
 %         Testing Scene_Data test dataset, using predict
         disp(sprintf('Testing SVM for binary classification of test dataset for CLASS: %d ',class));
         [label,~,~] = predict(SVMModels{class},test_data);
         
 %         Making a final array that stores class label for every observation in test dataset
+        
         for k=1:rows_test
             final_label(k,class)= label(k);
         end 
@@ -37,13 +38,14 @@ function []= multilabel_classification()
 %     Calculating accuracy for Scene_Data test dataset
     display('Calculating accuracy for Scene_Data test dataset');
     intersect_val=0.0;
+    id_vector=[1,1,1,1,1,1];
     union_val=0.0;
+    accuracy=0.0
     for k=1:rows_test
-        intersect_val= intersect_val+dot(test_class(k,:),final_label(k,:));
-        union_val= union_val+sum(test_class(k,:))+sum(final_label(k,:))-dot(test_class(k,:),final_label(k,:));
+        intersect_val= dot(test_class(k,:),final_label(k,:));
+        union_val= dot(test_class(k,:),id_vector)+dot(final_label(k,:),id_vector)-dot(test_class(k,:),final_label(k,:));
+        accuracy = accuracy+intersect_val/union_val;
     end
-    accuracy = intersect_val/union_val;
-    disp(sprintf('Accuracy for Scene_Data test dataset is: %f',accuracy));
-    disp(sprintf('Percentage accuracy for Scene_Data test dataset is: %f',accuracy*100));
+    disp(sprintf('Percentage accuracy for Scene_Data test dataset is: %f',accuracy/rows_test*100));
     
         
