@@ -1,6 +1,10 @@
 function []= multilabel_classification()
-    type = input('Question 1 \n Enter 1: Polynomial 2: Gaussian');
-    if uint8(type) ~=1 && uint8(type) ~=2
+    type = input('Question 2 \n Enter 1: Polynomial 2: Gaussian');
+    if type==1
+        display('Polynomial kernel selected');
+    elseif type==2
+        display('Gaussian Kernel Selected');
+    else
         disp('Enter the correct value');
         return;
     end
@@ -19,8 +23,8 @@ function []= multilabel_classification()
     display('Training models for Scene_Data traning dataset');
     for class=1:total_unique_classes
 %         class_index = eq(training_class(:,class),unique_classes(class));
-        if type==1 
-            SVMModels{class} = fitcsvm(training_data,training_class(:,class),'KernelFunction','polynomial','PolynomialOrder',2,'KernelScale','auto','Standardize',true);
+        if type==1   
+            SVMModels{class} = fitcsvm(training_data,training_class(:,class),'KernelFunction','polynomial','PolynomialOrder',2,'KernelScale','auto');
         else
             SVMModels{class} = fitcsvm(training_data,training_class(:,class),'KernelFunction','gaussian','KernelScale','auto','BoxConstraint',1);
         end
@@ -40,7 +44,7 @@ function []= multilabel_classification()
     intersect_val=0.0;
     id_vector=[1,1,1,1,1,1];
     union_val=0.0;
-    accuracy=0.0
+    accuracy=0.0;
     for k=1:rows_test
         intersect_val= dot(test_class(k,:),final_label(k,:));
         union_val= dot(test_class(k,:),id_vector)+dot(final_label(k,:),id_vector)-dot(test_class(k,:),final_label(k,:));
